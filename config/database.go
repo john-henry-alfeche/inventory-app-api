@@ -47,7 +47,7 @@ func ConnectDatabase() {
 	db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
 
 	// Auto-migrate models
-	if err := db.AutoMigrate(&models.Category{}, &models.Product{}); err != nil {
+	if err := db.AutoMigrate(&models.Category{}, &models.Product{}, &models.Supplier{}); err != nil {
 		log.Fatal(" Failed to auto-migrate models:", err)
 	}
 }

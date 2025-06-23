@@ -39,6 +39,15 @@ func SetupRoutes() *gin.Engine {
 			products.PUT("/:product_id", controllers.UpdateProductById)
 			products.DELETE("/:product_id", controllers.DeleteProductById)
 		}
+
+		suppliers := api.Group("suppliers")
+		{
+			suppliers.POST("", controllers.CreateSupplier)
+			suppliers.GET("", controllers.GetAllSuppliers)
+			suppliers.GET("/:supplier_id", controllers.GetSupplierById)
+			suppliers.PUT("/:supplier_id", controllers.UpdateSupplier)
+			suppliers.DELETE("/:supplier_id", controllers.DeleteSupplier)
+		}
 	}
 
 	return r
