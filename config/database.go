@@ -45,9 +45,28 @@ func ConnectDatabase() {
 
 	// Enable UUID extension (if not already done in pg)
 	db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
+	// Create user_role_enum if not exists
+	db.Exec(`
+	DO $$
+	BEGIN
+		IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
+			CREATE TYPE user_role_enum AS ENUM ('admin', 'teller');
+		END IF;
+	END$$;
+	`)
+
+	// Create sales_order_status_enum if not exists
+	db.Exec(`
+	DO $$
+	BEGIN
+		IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'sales_order_status_enum') THEN
+			CREATE TYPE sales_order_status_enum AS ENUM ('pending', 'completed');
+		END IF;
+	END$$;
+	`)
 
 	// Auto-migrate models
-	if err := db.AutoMigrate(&models.Category{}, &models.Product{}, &models.Supplier{}); err != nil {
+	if err := db.AutoMigrate(&models.Category{}, &models.Product{}, &models.Supplier{}, &models.User{}, &models.Customer{}, &models.SalesOrder{}); err != nil {
 		log.Fatal(" Failed to auto-migrate models:", err)
 	}
 }
